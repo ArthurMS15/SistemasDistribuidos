@@ -52,3 +52,33 @@ class Chord:
         else:
             #encaminha inserção para o nó responsável
             node.insert_data(key, value)
+
+    #busca o valor associado a uma chave na rede
+    def lookup_data(self, address, key):
+        node = self.find_successor(key)
+        if node.address == address:
+            return node.lookup_data(key)
+        else:
+            #encaminha a busca para o nó responsável
+            return node.lookup_data(key)
+    
+    def print_nodes(self):
+        for node in self.nodes:
+            print(f"ID: {node.id}, Endereço: {node.address}")
+
+#cria rede com três nós
+chord = Chord(3)
+
+#adiciona três nós à rede
+node1 = chord.add_node('localhost:5001')
+node2 = chord.add_node('localhost:5002')
+node3 = chord.add_node('localhost:5003')
+
+chord.print_nodes()
+
+chord.remove_node('localhost:5002')
+
+chord.insert_data('localhost:5001', b'key1', b'value1')
+
+value = chord.lookup_data('localhost:5001', b'key1')
+print(value)  # b'value1'
