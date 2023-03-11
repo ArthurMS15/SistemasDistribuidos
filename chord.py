@@ -28,8 +28,11 @@ class Chord:
         return node
     
     def remove_node(self, address):
-        #encontra o nó correspondente ao endereço e o remove da lista de nós
-        node = next((n for n in self.nodes if n.address == address), None)
+        node = None
+        for n in self.nodes:
+            if n.address == address:
+                node = n
+                break
         if node:
             self.nodes.remove(node)
 
