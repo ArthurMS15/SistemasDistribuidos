@@ -32,3 +32,23 @@ class Chord:
         node = next((n for n in self.nodes if n.address == address), None)
         if node:
             self.nodes.remove(node)
+
+    #encontra nó responsável por uma chave na rede
+    def find_successor(self, key):
+        #calcula o identificador da chave como o hash SHA-1 da chave
+        id = int(sha1(key).hexdigest(), 16)
+        #procura o nó responsável por essa chave na lista ordenada de nós
+        for i, node in enumerate(self.nodes):
+            if node.id >= id:
+                return self.nodes[i % len(self.nodes)] # busca circular
+        # se nenhum nó encontrado, retorna primeiro nó da lista
+        return self.nodes[0]
+    
+    #insere um par chave-valor na rede
+    def insert_data(self, address, key, value):
+        node = self.find_successor(key)
+        if node.address == address:
+            node.insert_data(key, value)
+        else:
+            #encaminha inserção para o nó responsável
+            node.insert_data(key, value)
