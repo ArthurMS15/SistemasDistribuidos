@@ -20,9 +20,15 @@ class Chord:
         self.nodes = []  #lista que guarda os nós na rede
 
     def add_node(self, address):
-        # Calcula o identificador do nó como o hash SHA-1 do endereço
+        #calcula o identificador do nó como o hash SHA-1 do endereço
         id = int(sha1(address.encode()).hexdigest(), 16) % (2 ** self.n_bits)
         node = Node(id, address)
         self.nodes.append(node)
         self.nodes.sort(key=lambda n: n.id)  #ordena a lista de nós pelo id
         return node
+    
+    def remove_node(self, address):
+        #encontra o nó correspondente ao endereço e o remove da lista de nós
+        node = next((n for n in self.nodes if n.address == address), None)
+        if node:
+            self.nodes.remove(node)
