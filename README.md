@@ -18,15 +18,21 @@ Ele usa um sistema de identificação de nós baseado em hash para garantir que 
 
 # Definir o tamanho da rede: 
 
-determinado pelo número de bits usados para gerar as chaves de hash. Por exemplo, se usarmos 32 bits, a rede poderá conter até 2^32 nós.
+determinado pelo número de bits usados para gerar as chaves de hash, se usarmos 32 bits, a rede poderá conter até 2^32 nós.
 
-Inicializar a rede: selecione um nó aleatório para ser o nó de partida (ou nó zero) e atribua-lhe uma chave de hash de 0. Cada nó que se juntar à rede será atribuído uma chave de hash única de acordo com sua posição na rede.
+# Inicializar a rede: 
 
-Adicionar nós: quando um nó se juntar à rede, ele deve primeiro encontrar um nó existente na rede (por exemplo, o nó zero) e solicitar a sua adesão. O novo nó será atribuído uma chave de hash única e será adicionado à tabela de nós da rede. Em seguida, ele deve atualizar a tabela de sucessores e predecessores de cada nó da rede para refletir sua presença.
+selecione um nó aleatório para ser o nó de partida e atribua uma chave de hash de 0. Cada nó que se juntar à rede será atribuído uma chave de hash única de acordo com sua posição na rede.
 
-Inserir dados: para inserir um dado na rede, o nó deve primeiro calcular a chave de hash correspondente ao dado. Em seguida, ele deve enviar uma mensagem ao nó cuja chave de hash é a maior chave menor ou igual à chave do dado. Esse nó será responsável por armazenar o dado e deve atualizar sua própria tabela de sucessores e predecessores para refletir a presença do novo dado.
+# Adicionar nós: 
 
-Buscar dados: para buscar um dado na rede, o nó deve primeiro calcular a chave de hash correspondente ao dado. Em seguida, ele deve enviar uma mensagem ao nó cuja chave de hash é a maior chave menor ou igual à chave do dado. Esse nó será responsável por armazenar o dado e deve retornar o dado ao nó solicitante.
+quando um nó se juntar à rede, ele deve primeiro encontrar um nó existente na rede. O novo nó terá atribuído uma chave de hash única e será adicionado à tabela de nós da rede. Em seguida, ele deve atualizar a tabela de sucessores e predecessores de cada nó da rede para refletir sua presença.
 
-Remover nós: para remover um nó da rede, é necessário atualizar as tabelas de sucessores e predecessores dos nós adjacentes ao nó que está sendo removido. Se um nó for removido, todos os seus dados também devem ser removidos.
+# Inserir ou Buscar dados: 
+
+o nó deve primeiro calcular a chave de hash correspondente ao dado. Em seguida, ele deve enviar uma mensagem ao nó cuja chave de hash é a maior chave menor ou igual à chave do dado.
+
+# Remover nós: 
+
+é necessário atualizar as tabelas de sucessores e predecessores dos nós adjacentes ao nó que está sendo removido. Se um nó for removido, seus dados também devem ser.
 
