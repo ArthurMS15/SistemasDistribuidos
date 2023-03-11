@@ -11,3 +11,8 @@ O algoritmo deve permitir:
 - inserir novos nós
 
 - retirar nós
+
+O algoritmo Chord é usado em redes P2P estruturadas para permitir o armazenamento e recuperação de dados em um conjunto de nós interconectados. 
+
+Ele usa um sistema de identificação de nós baseado em hash para garantir que cada nó possa encontrar rapidamente os dados armazenados em outros nós na rede.
+
