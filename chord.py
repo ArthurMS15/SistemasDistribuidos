@@ -28,14 +28,16 @@ class Node:
 
     def build_finger_table(self):
         for i in range(160):
-            self.finger_table[i] = self.find_successor((self.id + 2**i) % 2**160)
+            self.finger_table[i] = self.find_successor((self.id + 2**i) % 2**160, i)
 
-    def find_successor(self, key):
+    def find_successor(self, key, depth=0):
         if self.successor.id == self.id or (self.id < key <= self.successor.id):
             return self.successor
+        elif depth >= 160:
+            return None
         else:
             node = self.closest_preceding_node(key)
-            return node.find_successor(key)
+            return node.find_successor(key, depth+1)
 
     def closest_preceding_node(self, key):
         for i in range(159, -1, -1):
@@ -45,15 +47,18 @@ class Node:
 
     def put(self, key, value):
         node = self.find_successor(key)
-        node.data[key] = value
+        if node:
+            node.data[key] = value
 
     def get(self, key):
         node = self.find_successor(key)
-        return node.data.get(key)
+        if node:
+            return node.data.get(key)
 
     def remove(self, key):
         node = self.find_successor(key)
-        del node.data[key]
+        if node:
+            del node.data[key]
 
     def print_ring(self):
         current_node = self
