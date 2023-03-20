@@ -1,87 +1,90 @@
-from hashlib import sha1 #importa o módulo de hash SHA1
+import hashlib
 
 class Node:
-    def __init__(self, id, address):
-        self.id = id  #hash SHA-1 do endereço
-        self.address = address  #string no formato "ip:porta"
-        self.data = {}  #dicionário que guarda os dados armazenados no nó
+    def __init__(self, address):
+        self.address = address
+        self.id = int(hashlib.sha1(address.encode('utf-8')).hexdigest(), 16)
+        self.data = {}
+        self.finger_table = [None] * 160
+        self.successor = None
+        self.predecessor = None
 
-    #insere um par chave-valor no dicionário de dados
-    def insert_data(self, key, value):
-        self.data[key] = value
+    def join(self, ring):
+        if not ring:
+            self.successor = self
+            self.predecessor = self
+        else:
+            self.successor = ring.find_successor(self.id)
+            self.predecessor = self.successor.predecessor
+            self.successor.predecessor = self
+            self.predecessor.successor = self
+        self.build_finger_table()
 
-    #busca valor associado a uma chave no dicionário de dados
-    def lookup_data(self, key):
-        return self.data.get(key)
+    def leave(self):
+        self.successor.predecessor = self.predecessor
+        self.predecessor.successor = self.successor
+        for key in self.data.keys():
+            self.successor.data[key] = self.data[key]
 
-class Chord:
-    def __init__(self, n_bits):
-        self.n_bits = n_bits  #número de bits dos identificadores de nó
-        self.nodes = []  #lista que guarda os nós na rede
+    def build_finger_table(self):
+        for i in range(160):
+            self.finger_table[i] = self.find_successor((self.id + 2**i) % 2**160)
 
-    def add_node(self, address):
-        #calcula o identificador do nó como o hash SHA-1 do endereço
-        id = int(sha1(address.encode()).hexdigest(), 16) % (2 ** self.n_bits)
-        node = Node(id, address)
-        self.nodes.append(node)
-        self.nodes.sort(key=lambda n: n.id)  #ordena a lista de nós pelo id
-        return node
-    
-    def remove_node(self, address):
-        node = None
-        for n in self.nodes:
-            if n.address == address:
-                node = n
-                break
-        if node:
-            self.nodes.remove(node)
-
-    #encontra nó responsável por uma chave na rede
     def find_successor(self, key):
-        #calcula o identificador da chave como o hash SHA-1 da chave
-        id = int(sha1(key).hexdigest(), 16)
-        #procura o nó responsável por essa chave na lista ordenada de nós
-        for i, node in enumerate(self.nodes):
-            if node.id >= id:
-                return self.nodes[i % len(self.nodes)] # busca circular
-        # se nenhum nó encontrado, retorna primeiro nó da lista
-        return self.nodes[0]
-    
-    #insere um par chave-valor na rede
-    def insert_data(self, address, key, value):
-        node = self.find_successor(key)
-        if node.address == address:
-            node.insert_data(key, value)
+        if self.successor.id == self.id or (self.id < key <= self.successor.id):
+            return self.successor
         else:
-            #encaminha inserção para o nó responsável
-            node.insert_data(key, value)
+            node = self.closest_preceding_node(key)
+            return node.find_successor(key)
 
-    #busca o valor associado a uma chave na rede
-    def lookup_data(self, address, key):
+    def closest_preceding_node(self, key):
+        for i in range(159, -1, -1):
+            if self.finger_table[i] and (self.id < self.finger_table[i].id < key):
+                return self.finger_table[i]
+        return self
+
+    def put(self, key, value):
         node = self.find_successor(key)
-        if node.address == address:
-            return node.lookup_data(key)
-        else:
-            #encaminha a busca para o nó responsável
-            return node.lookup_data(key)
-    
-    def print_nodes(self):
-        for node in self.nodes:
-            print(f"ID: {node.id}, Endereço: {node.address}")
+        node.data[key] = value
 
-#cria rede com três nós
-chord = Chord(3)
+    def get(self, key):
+        node = self.find_successor(key)
+        return node.data.get(key)
 
-#adiciona três nós à rede
-node1 = chord.add_node('localhost:5001')
-node2 = chord.add_node('localhost:5002')
-node3 = chord.add_node('localhost:5003')
+    def remove(self, key):
+        node = self.find_successor(key)
+        del node.data[key]
 
-chord.print_nodes()
+    def print_ring(self):
+        current_node = self
+        print("Ring:")
+        while True:
+            print(current_node.address)
+            current_node = current_node.successor
+            if current_node == self:
+                break
 
-chord.remove_node('localhost:5002')
+# Criação dos nós
+node1 = Node("192.168.0.1:5000")
+node2 = Node("192.168.0.2:5000")
 
-chord.insert_data('localhost:5001', b'key1', b'value1')
+# Junção dos nós na rede
+node1.join(None)
+node2.join(node1)
 
-value = chord.lookup_data('localhost:5001', b'key1')
-print(value)  # b'value1'
+# Inserção de um par chave-valor na rede
+node1.put(1, "valor 1")
+
+# Busca do valor associado à chave 1
+print(node1.get(1)) # deve imprimir "valor 1"
+print(node2.get(1)) # deve imprimir "valor 1"
+
+# Remoção do par chave-valor da rede
+node2.remove(1)
+
+# Busca do valor associado à chave 1 após remoção
+print(node1.get(1)) # deve imprimir None
+print(node2.get(1)) # deve imprimir None
+
+# Impressão da lista de nós na rede
+node1.print_ring() # deve imprimir "192.168.0.1:5000" e "192.168.0.2:5000"
