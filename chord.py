@@ -5,11 +5,11 @@ from typing import Dict, List, Optional, Tuple, Union
 class Node:
     def __init__(self, id: int): #construtor
         self.id = id                # identificador único para o nó.
-        self.isActive = False       # indicador de se o nó está ativo ou não.
+        self.estaAtivo = False       # indicador de se o nó está ativo ou não.
         self.predecessor = None     # referência ao nó predecessor.
         self.sucessor = None       # referência ao nó sucessor.
-        self.assignedNodes = []     # lista de nós que estão atribuídos a este nó.
-        self.data = {}              # dicionário vazio que pode ser usado para armazenar qualquer outra informação associada a este nó. # imutável
+        self.nodesAtribuidos = []     # lista de nós que estão atribuídos a este nó.
+        self.dados = {}              # dicionário vazio que pode ser usado para armazenar qualquer outra informação associada a este nó. # imutável
 
 class Chord:
     def __init__(self, n: int):         #criado para gerenciar um anel chord (pesquisar e recuperar info de sistemas distribuídos P2P)
@@ -21,11 +21,11 @@ class Chord:
             print(f"Node {i}:")
             print(f"  Predecessor: {node.predecessor.id if node.predecessor else None}")
             print(f"  Sucessor: {node.sucessor.id if node.sucessor else None}")
-            print(f"  Assigned nodes: {len(node.assignedNodes)}")
-            for assigned_node in node.assignedNodes:
+            print(f"  Nodes Atribuidos: {len(node.nodesAtribuidos)}")
+            for assigned_node in node.nodesAtribuidos:
                 print(f"    {assigned_node.id}")
-            print(f"  Data: {len(node.data)}")
-            for key, value in node.data.items():
+            print(f"  Dados: {len(node.dados)}")
+            for key, value in node.dados.items():
                 print(f"    {key}: {value}")
 
     #A função insert recebe como entrada o índice do nó que deve ser usado como ponto de partida para a busca do nó responsável por armazenar a chave key e seu valor value. A busca é realizada de forma circular, verificando se o hash da chave está entre o nó predecessor e o nó atual. Quando o nó responsável é encontrado, o valor é adicionado à sua estrutura de dados.
@@ -33,16 +33,16 @@ class Chord:
         if startNodeIndex < 0 or startNodeIndex >= self.n:
             raise ValueError("Node id out of range")
         currentNode = self.nodes[startNodeIndex]
-        if not currentNode.isActive:
+        if not currentNode.estaAtivo:
             raise ValueError("Inactive node")
         hashIndex = self.hash(key) % self.n
 
         for _ in range(self.n):
             if currentNode.predecessor and currentNode.sucessor:
-                if self.isBetweenCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
-                    for node in currentNode.assignedNodes:
+                if self.entreCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
+                    for node in currentNode.nodesAtribuidos:
                         if node.id == hashIndex:
-                            node.data[key] = value
+                            node.dados[key] = value
                     break
                 currentNode = currentNode.sucessor
             else:
@@ -52,75 +52,75 @@ class Chord:
         if startNodeIndex < 0 or startNodeIndex >= self.n:
             raise ValueError("Node id out of range")
         currentNode = self.nodes[startNodeIndex]
-        if not currentNode.isActive:
+        if not currentNode.estaAtivo:
             raise ValueError("Inactive node")
         hashIndex = self.hash(key) % self.n
 
         for _ in range(self.n):
             if currentNode.predecessor and currentNode.sucessor:
-                if self.isBetweenCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
-                    for node in currentNode.assignedNodes:
+                if self.entreCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
+                    for node in currentNode.nodesAtribuidos:
                         if node.id == hashIndex:
-                            return node.data.get(key)
+                            return node.dados.get(key)
                     break
                 currentNode = currentNode.sucessor
             else:
                 break
         return None
 
-    def addNode(self, id: int):         # adiciona um novo nó à rede, marcando-o como ativo e definindo seu predecessor e sucessor. Se o predecessor e o sucessor existirem, eles também atualizarão seus respectivos ponteiros. Em seguida, a lista de nós atribuídos de cada nó na rede é atualizada.
+    def adicionarNode(self, id: int):         # adiciona um novo nó à rede, marcando-o como ativo e definindo seu predecessor e sucessor. Se o predecessor e o sucessor existirem, eles também atualizarão seus respectivos ponteiros. Em seguida, a lista de nós atribuídos de cada nó na rede é atualizada.
         if id < 0 or id >= self.n:
             raise ValueError("Node id out of range")
         node = self.nodes[id]
-        node.isActive = True
+        node.estaAtivo = True
         node.predecessor = self.acharPredecessor(id)
         node.sucessor = self.acharSucessor(id)
         if node.predecessor:
             node.predecessor.sucessor = node
         if node.sucessor:
             node.sucessor.predecessor = node
-        self.updateAssignedNodes()
+        self.updateNodeAtribuidos()
 
     def removeNode(self, id: int):          #remove um nó da rede, marcando-o como inativo e atualizando os ponteiros de seu predecessor e sucessor. Em seguida, a lista de nós atribuídos de cada nó na rede é atualizada.
         if id < 0 or id >= self.n:
             raise ValueError("Node id out of range")
         node = self.nodes[id]
-        node.isActive = False
+        node.estaAtivo = False
         if node.predecessor:
             node.predecessor.sucessor = node.sucessor
         if node.sucessor:
             node.sucessor.predecessor = node.predecessor
         node.predecessor = None
         node.sucessor = None
-        self.updateAssignedNodes()
+        self.updateNodeAtribuidos()
 
-    def updateAssignedNodes(self):  #percorre todos os nós da rede e identifica quais estão ativos e quais estão inativos.  Aqueles que estão ativos recebem uma lista de nós atribuídos que inclui os nós que estão inativos, mas que têm uma posição circular menor na rede. 
+    def updateNodeAtribuidos(self):  #percorre todos os nós da rede e identifica quais estão ativos e quais estão inativos. Aqueles que estão ativos recebem uma lista de nós atribuídos que inclui os nós que estão inativos, mas que têm uma posição circular menor na rede. 
         remainingInactiveNodes = []
         for curr in self.nodes:
-            if curr.isActive:
-                curr.assignedNodes = remainingInactiveNodes
+            if curr.estaAtivo:
+                curr.nodesAtribuidos = remainingInactiveNodes
                 remainingInactiveNodes = []
             else:
                 remainingInactiveNodes.append(curr)
         firstActiveNode = self.acharSucessor(self.n) #Em seguida, o método encontra o primeiro nó ativo na rede que segue o nó n (o último nó na rede). Esse nó é então atribuído à lista de nós atribuídos do primeiro nó ativo encontrado.
         if firstActiveNode:
-            firstActiveNode.assignedNodes = remainingInactiveNodes
+            firstActiveNode.nodesAtribuidos = remainingInactiveNodes
 
     def acharPredecessor(self, id: int) -> Optional[Node]:     #itera em sentido anti horário pelos nós da rede, começando pelo nó anterior ao id informado, retorna o primeio nó ativo 
         for i in range(id - 1, id - self.n, -1):
             index = self.circleIndex(i)
-            if self.nodes[index].isActive:
+            if self.nodes[index].estaAtivo:
                 return self.nodes[index]
         return None
 
     def acharSucessor(self, id: int) -> Optional[Node]:       ##itera em sentido horário pelos nós da rede, começando pelo nó posterior ao id informado, retorna o primeio nó ativo    
         for i in range(id + 1, id + self.n):
             index = self.circleIndex(i)
-            if self.nodes[index].isActive:
+            if self.nodes[index].estaAtivo:
                 return self.nodes[index]
         return None
 
-    def isBetweenCircular(self, num: int, start: int, end: int) -> bool:    #verifica se num está entre o intervalo entre start e end A função retorna True se num estiver dentro do intervalo e False caso contrário.
+    def entreCircular(self, num: int, start: int, end: int) -> bool:    #verifica se num está entre o intervalo entre start e end A função retorna True se num estiver dentro do intervalo e False caso contrário.
         if start < end:
             return num > start and num <= end
         else:
@@ -137,11 +137,11 @@ class Chord:
 
 #chord = Chord(16)
 #
-#chord.addNode(1)
-#chord.addNode(6)
-#chord.addNode(8)
-#chord.addNode(11)
-#chord.addNode(13)
+#chord.adicionarNode(1)
+#chord.adicionarNode(6)
+#chord.adicionarNode(8)
+#chord.adicionarNode(11)
+#chord.adicionarNode(13)
 #
 #chord.removeNode(11)
 #
