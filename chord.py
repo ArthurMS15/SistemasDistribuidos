@@ -1,4 +1,4 @@
-from hashlib import sha1 #função iportada para calcular ua hash de uma mensagem que vai ser usada para verificar a integridade da mensagem
+from hashlib import sha1
 
 class Node:
     def __init__(self, id: int): #construtor
