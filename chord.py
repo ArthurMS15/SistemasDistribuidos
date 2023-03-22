@@ -20,7 +20,7 @@ class Chord:
         for i, node in enumerate(self.nodes):       #for itera sobre todos os nós e usa a função enumerate para ter tanto o índice quando o opróprio objeto do nó
             print(f"Node {i}:")
             print(f"  Predecessor: {node.predecessor.id if node.predecessor else None}")
-            print(f"  Successor: {node.successor.id if node.successor else None}")
+            print(f"  Sucessor: {node.successor.id if node.successor else None}")
             print(f"  Assigned nodes: {len(node.assignedNodes)}")
             for assigned_node in node.assignedNodes:
                 print(f"    {assigned_node.id}")
@@ -73,8 +73,8 @@ class Chord:
             raise ValueError("Node id out of range")
         node = self.nodes[id]
         node.isActive = True
-        node.predecessor = self.findPredecessor(id)
-        node.successor = self.findSuccessor(id)
+        node.predecessor = self.acharPredecessor(id)
+        node.successor = self.acharSucessor(id)
         if node.predecessor:
             node.predecessor.successor = node
         if node.successor:
@@ -102,18 +102,18 @@ class Chord:
                 remainingInactiveNodes = []
             else:
                 remainingInactiveNodes.append(curr)
-        firstActiveNode = self.findSuccessor(self.n) #Em seguida, o método encontra o primeiro nó ativo na rede que segue o nó n (o último nó na rede). Esse nó é então atribuído à lista de nós atribuídos do primeiro nó ativo encontrado.
+        firstActiveNode = self.acharSucessor(self.n) #Em seguida, o método encontra o primeiro nó ativo na rede que segue o nó n (o último nó na rede). Esse nó é então atribuído à lista de nós atribuídos do primeiro nó ativo encontrado.
         if firstActiveNode:
             firstActiveNode.assignedNodes = remainingInactiveNodes
 
-    def findPredecessor(self, id: int) -> Optional[Node]:     #itera em sentido anti horário pelos nós da rede, começando pelo nó anterior ao id informado, retorna o primeio nó ativo 
+    def acharPredecessor(self, id: int) -> Optional[Node]:     #itera em sentido anti horário pelos nós da rede, começando pelo nó anterior ao id informado, retorna o primeio nó ativo 
         for i in range(id - 1, id - self.n, -1):
             index = self.circleIndex(i)
             if self.nodes[index].isActive:
                 return self.nodes[index]
         return None
 
-    def findSuccessor(self, id: int) -> Optional[Node]:       ##itera em sentido horário pelos nós da rede, começando pelo nó posterior ao id informado, retorna o primeio nó ativo    
+    def acharSucessor(self, id: int) -> Optional[Node]:       ##itera em sentido horário pelos nós da rede, começando pelo nó posterior ao id informado, retorna o primeio nó ativo    
         for i in range(id + 1, id + self.n):
             index = self.circleIndex(i)
             if self.nodes[index].isActive:
