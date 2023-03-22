@@ -66,7 +66,7 @@ class Chord:
                 break
         return None
 
-    def adicionarNode(self, id: int):         #marca como ativo e define seu predecessor e sucessor. Se o predecessor e o sucessor existirem, eles também atualizarão seus respectivos ponteiros. 
+    def adicionarativarNode(self, id: int):         #marca como ativo e define seu predecessor e sucessor. Se o predecessor e o sucessor existirem, eles também atualizarão seus respectivos ponteiros. 
         if id < 0 or id >= self.n:
             raise ValueError("Node fora dos limites")
         node = self.nodes[id]
@@ -135,11 +135,11 @@ class Chord:
 
 chord = Chord(20)
 
-chord.adicionarNode(1)
-chord.adicionarNode(5)
-chord.adicionarNode(10)
-chord.adicionarNode(11)
-chord.adicionarNode(14)
+chord.adicionarativarNode(1)
+chord.adicionarativarNode(5)
+chord.adicionarativarNode(10)
+chord.adicionarativarNode(11)
+chord.adicionarativarNode(14)
 
 chord.removeNode(11)
 
