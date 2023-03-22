@@ -7,7 +7,7 @@ class Node:
         self.id = id                # identificador único para o nó.
         self.isActive = False       # indicador de se o nó está ativo ou não.
         self.predecessor = None     # referência ao nó predecessor.
-        self.successor = None       # referência ao nó sucessor.
+        self.sucessor = None       # referência ao nó sucessor.
         self.assignedNodes = []     # lista de nós que estão atribuídos a este nó.
         self.data = {}              # dicionário vazio que pode ser usado para armazenar qualquer outra informação associada a este nó. # imutável
 
@@ -20,7 +20,7 @@ class Chord:
         for i, node in enumerate(self.nodes):       #for itera sobre todos os nós e usa a função enumerate para ter tanto o índice quando o opróprio objeto do nó
             print(f"Node {i}:")
             print(f"  Predecessor: {node.predecessor.id if node.predecessor else None}")
-            print(f"  Sucessor: {node.successor.id if node.successor else None}")
+            print(f"  Sucessor: {node.sucessor.id if node.sucessor else None}")
             print(f"  Assigned nodes: {len(node.assignedNodes)}")
             for assigned_node in node.assignedNodes:
                 print(f"    {assigned_node.id}")
@@ -38,13 +38,13 @@ class Chord:
         hashIndex = self.hash(key) % self.n
 
         for _ in range(self.n):
-            if currentNode.predecessor and currentNode.successor:
+            if currentNode.predecessor and currentNode.sucessor:
                 if self.isBetweenCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
                     for node in currentNode.assignedNodes:
                         if node.id == hashIndex:
                             node.data[key] = value
                     break
-                currentNode = currentNode.successor
+                currentNode = currentNode.sucessor
             else:
                 break
     #A função get é similar à insert, mas é usada para recuperar o valor associado a uma chave key. A busca é realizada de forma circular, verificando se o hash da chave está entre o nó predecessor e o nó atual. Quando o nó responsável é encontrado, a função verifica se a chave está presente em sua estrutura de dados, e retorna seu valor caso esteja presente. Caso contrário, retorna None.
@@ -57,13 +57,13 @@ class Chord:
         hashIndex = self.hash(key) % self.n
 
         for _ in range(self.n):
-            if currentNode.predecessor and currentNode.successor:
+            if currentNode.predecessor and currentNode.sucessor:
                 if self.isBetweenCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
                     for node in currentNode.assignedNodes:
                         if node.id == hashIndex:
                             return node.data.get(key)
                     break
-                currentNode = currentNode.successor
+                currentNode = currentNode.sucessor
             else:
                 break
         return None
@@ -74,11 +74,11 @@ class Chord:
         node = self.nodes[id]
         node.isActive = True
         node.predecessor = self.acharPredecessor(id)
-        node.successor = self.acharSucessor(id)
+        node.sucessor = self.acharSucessor(id)
         if node.predecessor:
-            node.predecessor.successor = node
-        if node.successor:
-            node.successor.predecessor = node
+            node.predecessor.sucessor = node
+        if node.sucessor:
+            node.sucessor.predecessor = node
         self.updateAssignedNodes()
 
     def removeNode(self, id: int):          #remove um nó da rede, marcando-o como inativo e atualizando os ponteiros de seu predecessor e sucessor. Em seguida, a lista de nós atribuídos de cada nó na rede é atualizada.
@@ -87,11 +87,11 @@ class Chord:
         node = self.nodes[id]
         node.isActive = False
         if node.predecessor:
-            node.predecessor.successor = node.successor
-        if node.successor:
-            node.successor.predecessor = node.predecessor
+            node.predecessor.sucessor = node.sucessor
+        if node.sucessor:
+            node.sucessor.predecessor = node.predecessor
         node.predecessor = None
-        node.successor = None
+        node.sucessor = None
         self.updateAssignedNodes()
 
     def updateAssignedNodes(self):  #percorre todos os nós da rede e identifica quais estão ativos e quais estão inativos.  Aqueles que estão ativos recebem uma lista de nós atribuídos que inclui os nós que estão inativos, mas que têm uma posição circular menor na rede. 
