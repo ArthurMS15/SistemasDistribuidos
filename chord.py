@@ -47,22 +47,22 @@ class Chord:
                 break
    
     #recupera o valor associado a uma chave key. A busca é realizada de forma circular, verificando se o hash da chave está entre o nó predecessor e o nó atual
-    def buscar(self, startNodeIndex: int, key: str) -> str:
-        if startNodeIndex < 0 or startNodeIndex >= self.n:
-            raise ValueError("Node id out of range")
-        currentNode = self.nodes[startNodeIndex]
-        if not currentNode.estaAtivo:
-            raise ValueError("Inactive node")
+    def buscar(self, nodoInicial: int, key: str) -> str:
+        if nodoInicial < 0 or nodoInicial >= self.n:
+            raise ValueError("Node fora dos limites")
+        nodoDeAgora = self.nodes[nodoInicial]
+        if not nodoDeAgora.estaAtivo:
+            raise ValueError("Nodo não ativado")
         hashIndex = self.hash(key) % self.n
 
         for _ in range(self.n):
-            if currentNode.predecessor and currentNode.sucessor:
-                if self.entreCircular(hashIndex, currentNode.predecessor.id, currentNode.id):
-                    for node in currentNode.nodesAtribuidos:
+            if nodoDeAgora.predecessor and nodoDeAgora.sucessor:
+                if self.entreCircular(hashIndex, nodoDeAgora.predecessor.id, nodoDeAgora.id):
+                    for node in nodoDeAgora.nodesAtribuidos:
                         if node.id == hashIndex:
-                            return node.dados.get(key)
+                            return node.dados.buscar(key)
                     break
-                currentNode = currentNode.sucessor
+                nodoDeAgora = nodoDeAgora.sucessor
             else:
                 break
         return None
