@@ -136,7 +136,7 @@ class Chord:
 chord = Chord(20)
 
 chord.adicionarNode(1)
-chord.adicionarNode(6)
+chord.adicionarNode(5)
 chord.adicionarNode(10)
 chord.adicionarNode(11)
 chord.adicionarNode(14)
