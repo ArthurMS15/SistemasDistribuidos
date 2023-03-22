@@ -148,6 +148,7 @@ chord.insereDados(1, '2', '12')
 chord.insereDados(1, '3', '10')
 
 chord.print()
+
 print("\n")
 print(chord.buscarDados(1, '1'))
 
