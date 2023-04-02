@@ -50,3 +50,5 @@ client.on("data", (data) => { //define uma função de callback para lidar com o
 client.on("close", () => {
   console.log("Conexão encerrada.");
 });
+
+//node client.js 127.0.0.1 1234 arquivo.txt
