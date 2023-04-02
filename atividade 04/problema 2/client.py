@@ -58,3 +58,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#python client.py 127.0.0.1 1234
