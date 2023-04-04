@@ -11,8 +11,8 @@ students = {
 # Questões de múltipla escolha
 questions = [
     {
-        "question": "Qual é a capital da França?",
-        "options": ["Paris", "Londres", "Berlim", "Madri"],
+        "question": "Quanto é 2+2?",
+        "options": ["4", "5", "6", "3"],
         "answer": 0
     },
     {
