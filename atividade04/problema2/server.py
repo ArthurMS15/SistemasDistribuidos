@@ -51,36 +51,24 @@ def main():
                 conn.send("FAILED".encode())
 
         # Enviar questões e receber respostas
-        #correct_answers = 0
-        #for index, question in enumerate(questions): #Loop através das questões, envia cada questão para o aluno e recebe a resposta do aluno. 
-        #    question_data = {
-        #        "question": question["question"],
-        #        "options": question["options"]
-        #    }
-        #    conn.send(json.dumps(question_data).encode())
-        #    student_answer = int(conn.recv(1024).decode())
-#
-        #    if student_answer == question["answer"]: #Prepara e envia o resultado final para o aluno, contendo o total de questões e o total de acertos.
-        #        correct_answers += 1
-        #        conn.send("CORRECT".encode())
-        #    else:
-        #        conn.send("INCORRECT".encode())
         correct_answers = 0
         for index, question in enumerate(questions):
-            conn.sendall(question["question"].encode())
-            conn.recv(1024)  # Adicione esta linha
-        
-            for option in question["options"]:
-                conn.sendall(option.encode())
-                conn.recv(1024)  # Adicione esta linha
-        
+            question_data = {
+                "question": question["question"],
+                "options": question["options"]
+            }
+            serialized_question = json.dumps(question_data).encode().ljust(4096)
+            conn.sendall(serialized_question)
+
             student_answer = int(conn.recv(1024).decode())
-        
+
             if student_answer == question["answer"]:
                 correct_answers += 1
                 conn.sendall("CORRECT".encode())
             else:
                 conn.sendall("INCORRECT".encode())
+
+        
         # Enviar resultado final
         result = {
             "total_questions": len(questions),

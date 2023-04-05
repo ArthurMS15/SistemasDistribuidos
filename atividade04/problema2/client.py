@@ -30,42 +30,19 @@ def main():
             print("Matrícula ou senha incorretos. Tente novamente.")
 
     # Receber questões e enviar respostas
-    #while True:
-    #    question_data = client.recv(4096).decode() #inicia o loop principal para receber questões e enviar respostas, recebe dados da questão do servidor e os decodifica em uma string
-    #    if not question_data:
-    #        break
-    #    question = json.loads(question_data)
-    #    print(f"\n{question['question']}") #converte os dados da questão em um objeto JSON.
-#
-    #    for idx, option in enumerate(question["options"]): #exibe o enunciado da questão e as opções de resposta.
-    #        print(f"{idx}. {option}")
-#
-    #    student_answer = int(input("Digite o número da resposta correta: ")) #solicita ao aluno que digite o número da resposta correta e armazena na variável student_answer.
-    #    client.send(str(student_answer).encode())
-#
-    #    response = client.recv(1024).decode() #recebe a resposta do servidor sobre a correção da resposta do aluno.
-    #    if response == "CORRECT":
-    #        print("Resposta correta!")
-    #    else:
-    #        print("Resposta incorreta.")
     while True:
-        question_text = client.recv(4096).decode()
-        if not question_text:
+        question_data = client.recv(4096).decode().strip()  # Adicione .strip() aqui
+        if not question_data:
             break
-        print(f"\n{question_text}")
-    
-        options = []
-        for i in range(4):
-            option = client.recv(4096).decode()
-            options.append(option)
-            client.sendall("OK".encode())  # Adicione esta linha
-    
-        for idx, option in enumerate(options):
+        question = json.loads(question_data)
+        print(f"\n{question['question']}")
+
+        for idx, option in enumerate(question["options"]):
             print(f"{idx}. {option}")
-    
+
         student_answer = int(input("Digite o número da resposta correta: "))
-        client.sendall(str(student_answer).encode())
-    
+        client.send(str(student_answer).encode())
+
         response = client.recv(1024).decode()
         if response == "CORRECT":
             print("Resposta correta!")
