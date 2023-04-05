@@ -49,17 +49,22 @@ def main():
     #    else:
     #        print("Resposta incorreta.")
     while True:
-        question_data = client.recv(4096).decode().strip()
-        if not question_data:
+        question_text = client.recv(4096).decode()
+        if not question_text:
             break
-        question = json.loads(question_data)
-        print(f"\n{question['question']}")
+        print(f"\n{question_text}")
     
-        for idx, option in enumerate(question["options"]):
+        options = []
+        for i in range(4):
+            option = client.recv(4096).decode()
+            options.append(option)
+            client.sendall("OK".encode())  # Adicione esta linha
+    
+        for idx, option in enumerate(options):
             print(f"{idx}. {option}")
     
         student_answer = int(input("Digite o número da resposta correta: "))
-        client.sendall(str(student_answer).encode())  # Modifique esta linha
+        client.sendall(str(student_answer).encode())
     
         response = client.recv(1024).decode()
         if response == "CORRECT":
