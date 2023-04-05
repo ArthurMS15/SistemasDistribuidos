@@ -53,9 +53,9 @@ def main():
 
     # Receber resultado final
     print(client.recv(4096).decode())
-    #result = json.loads(client.recv(4096).decode()) #Recebe o resultado final do servidor e o converte em um objeto JSON.
-    #prin(f"\nTotal de questões: {result['total_questions']}")
-    #print(f"Total de acertos: {result['correct_answers']}")t
+    result = json.loads(client.recv(4096).decode()) #Recebe o resultado final do servidor e o converte em um objeto JSON.
+    print(f"\nTotal de questões: {result['total_questions']}")
+    print(f"Total de acertos: {result['correct_answers']}")
 
     client.close()
 

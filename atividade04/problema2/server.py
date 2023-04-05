@@ -56,8 +56,8 @@ def main():
                 "question": question["question"],
                 "options": question["options"]
             }
-            #serialized_question = json.dumps(question_data).encode().ljust(4096)
-            #conn.sendall(serialized_question)
+            serialized_question = json.dumps(question_data).encode().ljust(4096)
+            conn.sendall(serialized_question)
 
             student_answer = int(conn.recv(1024).decode())
             if student_answer == question["answer"]:
@@ -71,7 +71,7 @@ def main():
             "total_questions": len(questions),
             "correct_answers": correct_answers
         }
-        #conn.send(json.dumps(result).encode())
+        conn.send(json.dumps(result).encode())
         conn.close()
 
 if __name__ == "__main__":
