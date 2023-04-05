@@ -16,19 +16,18 @@ questions = [
         "answer": 0
     },
     {
-        "question": "Qual é a moeda do Japão?",
-        "options": ["Dólar", "Euro", "Iene", "Libra"],
+        "question": "Qaunto é 3*3?",
+        "options": ["16", "6", "9", "27"],
         "answer": 2
     }
 ]
 
 def main():
-    # if len(sys.argv) != 2:
-    #     print("Uso: python server.py <porta>") #verifica se a quantidade correta de argumentos foi fornecida
-    #     sys.exit(1)
+    if len(sys.argv) != 2:
+        print("Uso: python server.py <porta>") #verifica se a quantidade correta de argumentos foi fornecida
+        sys.exit(1)
 
-    # port = int(sys.argv[1]) # Armazena o primeiro argumento da linha de comando converte para inteiro
-    port = 1234
+    port = int(sys.argv[1]) # Armazena o primeiro argumento da linha de comando converte para inteiro
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Cria um novo objeto de socket para o servidor.
     server.bind(('', port)) #Associa o servidor à porta especificada.
     server.listen(1)
