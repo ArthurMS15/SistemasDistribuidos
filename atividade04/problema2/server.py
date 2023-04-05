@@ -71,16 +71,15 @@ def main():
                 "question": question["question"],
                 "options": question["options"]
             }
-            serialized_question = json.dumps(question_data).encode().ljust(4096)  # Adicione esta linha
-            conn.send(serialized_question)  # Modifique esta linha
+            serialized_question = json.dumps(question_data).encode().ljust(4096)
+            conn.sendall(serialized_question)  # Modifique esta linha
             student_answer = int(conn.recv(1024).decode())
         
             if student_answer == question["answer"]:
                 correct_answers += 1
-                conn.send("CORRECT".encode())
+                conn.sendall("CORRECT".encode())  # Modifique esta linha
             else:
-                conn.send("INCORRECT".encode())
-
+                conn.sendall("INCORRECT".encode())  # Modifique esta linha
         # Enviar resultado final
         result = {
             "total_questions": len(questions),

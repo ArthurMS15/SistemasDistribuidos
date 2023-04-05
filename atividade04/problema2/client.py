@@ -49,7 +49,7 @@ def main():
     #    else:
     #        print("Resposta incorreta.")
     while True:
-        question_data = client.recv(4096).decode().strip()  # Modifique esta linha
+        question_data = client.recv(4096).decode().strip()
         if not question_data:
             break
         question = json.loads(question_data)
@@ -59,7 +59,7 @@ def main():
             print(f"{idx}. {option}")
     
         student_answer = int(input("Digite o número da resposta correta: "))
-        client.send(str(student_answer).encode())
+        client.sendall(str(student_answer).encode())  # Modifique esta linha
     
         response = client.recv(1024).decode()
         if response == "CORRECT":
