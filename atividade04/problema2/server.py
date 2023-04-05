@@ -51,16 +51,31 @@ def main():
                 conn.send("FAILED".encode())
 
         # Enviar questões e receber respostas
+        #correct_answers = 0
+        #for index, question in enumerate(questions): #Loop através das questões, envia cada questão para o aluno e recebe a resposta do aluno. 
+        #    question_data = {
+        #        "question": question["question"],
+        #        "options": question["options"]
+        #    }
+        #    conn.send(json.dumps(question_data).encode())
+        #    student_answer = int(conn.recv(1024).decode())
+#
+        #    if student_answer == question["answer"]: #Prepara e envia o resultado final para o aluno, contendo o total de questões e o total de acertos.
+        #        correct_answers += 1
+        #        conn.send("CORRECT".encode())
+        #    else:
+        #        conn.send("INCORRECT".encode())
         correct_answers = 0
-        for index, question in enumerate(questions): #Loop através das questões, envia cada questão para o aluno e recebe a resposta do aluno. 
+        for index, question in enumerate(questions):
             question_data = {
                 "question": question["question"],
                 "options": question["options"]
             }
-            conn.send(json.dumps(question_data).encode())
+            serialized_question = json.dumps(question_data).encode().ljust(4096)  # Adicione esta linha
+            conn.send(serialized_question)  # Modifique esta linha
             student_answer = int(conn.recv(1024).decode())
-
-            if student_answer == question["answer"]: #Prepara e envia o resultado final para o aluno, contendo o total de questões e o total de acertos.
+        
+            if student_answer == question["answer"]:
                 correct_answers += 1
                 conn.send("CORRECT".encode())
             else:
