@@ -1,4 +1,4 @@
-import socket #módulo necessário para ciraçaão da comunicação cliente-servidor
+import socket #módulo necessário para criar comunicação cliente-servidor
 import sys
 import os #manipulação de caminhos de arquivos e diretórios.
 
@@ -11,18 +11,18 @@ def main():
     directory = sys.argv[2]
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #cria um novo objeto de socket usando o protocolo IPv4 (AF_INET) e TCP (SOCK_STREAM). 
-    server.bind(('', port))                                    #cincula o socket ao endereço e porta especificados
-    server.listen(1)                                           #servidor em modo de escuta, aguardando conexões de clientes
+    server.bind(('', port))                                    #vincula o socket ao endereço e porta especificados
+    server.listen(1)                                           #aguarda conexões de clientes
     print(f"Servidor escutando na porta {port}...")
 
     while True:
         conn, addr = server.accept()                           #aceita uma conexão de cliente e retorna um novo objeto de socket (conn) e o endereço do cliente (addr).
         print(f"Conexão estabelecida com {addr}")
         filename = conn.recv(1024).decode()                    #recebe dados do cliente (tamanho máximo de 1024 bytes) e decodifica-os para obter o nome do arquivo.
-        filepath = os.path.join(directory, filename)           #combina o diretório fornecido e o nome do arquivo para criar o caminho completo do arquivo.
+        filepath = os.path.join(directory, filename)           #cria o caminho completo do arquivo.
 
         if os.path.isfile(filepath):                           #verifica se o arquivo existe no caminho especificado.
-            conn.send(b"EXIST " + str(os.path.getsize(filepath)).encode()) #envia a mensagem "EXIST" e o tamanho do arquivo em bytes para o cliente.
+            conn.send(b"EXIST " + str(os.path.getsize(filepath)).encode()) #envia a mensagem "EXIST" e o tamanho em bytes 
             user_response = conn.recv(1024).decode()           #recebe a resposta do cliente e a decodifica
 
             if user_response == "OK":
@@ -39,5 +39,5 @@ def main():
 if __name__ == "__main__":
     main()
     
-#python server.py 1234 /tmp/repositorio
+#python server.py 1234 C:\Users\Teste\Documents\GitHub\SistemasDistribuidos\atividade04\problema1\teste
 

@@ -1,5 +1,5 @@
 import socket #criar um servidor de rede e se comunicar com o cliente.
-import json #codificar e decodificar objetos JSON.
+import json 
 import sys #acessar argumentos da linha de comando e sair do programa.
 
 # Alunos e senhas dicionário contendo matrículas e senhas dos alunos.
@@ -27,19 +27,19 @@ def main():
         print("Uso: python server.py <porta>") #verifica se a quantidade correta de argumentos foi fornecida
         sys.exit(1)
 
-    port = int(sys.argv[1]) # Armazena o primeiro argumento da linha de comando converte para inteiro
+    port = int(sys.argv[1]) # pega a porta e converte para inteiro
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Cria um novo objeto de socket para o servidor.
     server.bind(('', port)) #Associa o servidor à porta especificada.
     server.listen(1)
     print(f"Servidor escutando na porta {port}...")
 
     while True:
-        conn, addr = server.accept()    #Aceita uma conexão de cliente e retorna um novo objeto de socket e o endereço do cliente.
+        conn, addr = server.accept()    #retorna um novo objeto de socket e o endereço do cliente.
         print(f"Conexão estabelecida com {addr}")
 
         # Autenticação do aluno
         authenticated = False
-        while not authenticated: # Lida com a autenticação do aluno. Recebe a matrícula e a senha do aluno e verifica se estão corretas. 
+        while not authenticated: # recebe a matrícula e a senha do aluno e verifica se estão corretas. 
             student_id = conn.recv(1024).decode()
             password = conn.recv(1024).decode()
 
@@ -56,8 +56,8 @@ def main():
                 "question": question["question"],
                 "options": question["options"]
             }
-            serialized_question = json.dumps(question_data).encode().ljust(4096)
-            conn.sendall(serialized_question)
+            #serialized_question = json.dumps(question_data).encode().ljust(4096)
+            #conn.sendall(serialized_question)
 
             student_answer = int(conn.recv(1024).decode())
             if student_answer == question["answer"]:
@@ -66,13 +66,12 @@ def main():
             else:
                 conn.sendall("INCORRECT".encode())
 
-        
         # Enviar resultado final
         result = {
             "total_questions": len(questions),
             "correct_answers": correct_answers
         }
-        conn.send(json.dumps(result).encode())
+        #conn.send(json.dumps(result).encode())
         conn.close()
 
 if __name__ == "__main__":

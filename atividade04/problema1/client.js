@@ -2,9 +2,9 @@ const net = require("net");
 const fs = require("fs");
 const process = require("process");
 
-/*Importa o módulo net, necessário para criar um cliente de rede e se comunicar com o servidor.
-Importa o módulo fs, usado para criar e manipular arquivos no sistema de arquivos local.
-Importa o módulo process, usado para acessar argumentos da linha de comando e sair do programa.*/
+/*net, criar um cliente de rede e se comunicar com o servidor.
+fs, criar e manipular arquivos no sistema de arquivos local.
+process, acessar argumentos da linha de comando e sair do programa.*/
 
 if (process.argv.length !== 5) {
   console.log("Uso: node client.js <ip_servidor> <porta> <nome_arquivo>");  //quantidade correta de argumentos foi fornecia
@@ -19,7 +19,7 @@ const client = new net.Socket();  //cria um novo objeto de socket para o cliente
 client.connect(serverPort, serverIP, () => {
   console.log("Conectado ao servidor");
   client.write(fileName);
-}); //conecta-se ao servidor no IP e porta especificados e define uma função de callback a ser chamada quando a conexão for estabelecida.
+}); //conecta-se ao servidor no IP e porta especificados
 
 client.on("data", (data) => { //define uma função de callback para lidar com os dados recebidos do servidor.
   const response = data.toString(); //converte os dados recebidos em uma string.
@@ -33,14 +33,13 @@ client.on("data", (data) => { //define uma função de callback para lidar com o
     client.on("data", (chunk) => {
       receivedBytes += chunk.length;
       const progress = (receivedBytes / fileSize) * 100;
-      console.log(`Recebendo arquivo... ${progress.toFixed(2)}%`); //Calcule e exibe o progresso da transferência do arquivo. 
       fileStream.write(chunk);
 
       if (receivedBytes === fileSize) {
         console.log("Arquivo recebido com sucesso.");
         client.destroy();
       }
-    }); // Define uma função de callback para lidar com os dados recebidos (chunks) do servidor.
+    });
   } else {
     console.log("Arquivo não encontrado.");
     client.destroy();
