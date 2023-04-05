@@ -7,7 +7,7 @@ fs, criar e manipular arquivos no sistema de arquivos local.
 process, acessar argumentos da linha de comando e sair do programa.*/
 
 if (process.argv.length !== 5) {
-  console.log("Uso: node client.js <ip_servidor> <porta> <nome_arquivo>");  //quantidade correta de argumentos foi fornecia
+  console.log("Uso: node client.js <ip_servidor> <porta> <nome_arquivo>");  //quantidade correta de argumentos
   process.exit(1);
 }
 
