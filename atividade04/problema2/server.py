@@ -23,12 +23,12 @@ questions = [
 ]
 
 def main():
-    if len(sys.argv) != 2:
-        print("Uso: python server.py <porta>") #verifica se a quantidade correta de argumentos foi fornecida
-        sys.exit(1)
+    # if len(sys.argv) != 2:
+    #     print("Uso: python server.py <porta>") #verifica se a quantidade correta de argumentos foi fornecida
+    #     sys.exit(1)
 
-    port = int(sys.argv[1]) # Armazena o primeiro argumento da linha de comando converte para inteiro
-
+    # port = int(sys.argv[1]) # Armazena o primeiro argumento da linha de comando converte para inteiro
+    port = 1234
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Cria um novo objeto de socket para o servidor.
     server.bind(('', port)) #Associa o servidor à porta especificada.
     server.listen(1)
@@ -61,7 +61,6 @@ def main():
             conn.sendall(serialized_question)
 
             student_answer = int(conn.recv(1024).decode())
-
             if student_answer == question["answer"]:
                 correct_answers += 1
                 conn.sendall("CORRECT".encode())
