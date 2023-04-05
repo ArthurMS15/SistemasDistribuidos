@@ -2,8 +2,6 @@ import socket #criar um cliente de rede e se comunicar com o servidor.
 import json #codificar e decodificar objetos JSON.
 import sys #acessar argumentos da linha de comando e sair do programa.
 
-cont = 0
-
 def main():
     if len(sys.argv) != 3:
         print("Uso: python client.py <ip_servidor> <porta>")    #quantidade correta de argumentos fornecido
@@ -32,6 +30,7 @@ def main():
             print("Matrícula ou senha incorretos. Tente novamente.")
 
     # Receber questões e enviar respostas
+    cont = 0
     while cont<2:
         question_data = client.recv(4096).decode().strip()  # Adicione .strip() aqui
         if not question_data:
@@ -53,9 +52,10 @@ def main():
         cont += 1
 
     # Receber resultado final
-    result = json.loads(client.recv(4096).decode()) #Recebe o resultado final do servidor e o converte em um objeto JSON.
-    print(f"\nTotal de questões: {result['total_questions']}")
-    print(f"Total de acertos: {result['correct_answers']}")
+    print(client.recv(4096).decode())
+    #result = json.loads(client.recv(4096).decode()) #Recebe o resultado final do servidor e o converte em um objeto JSON.
+    #prin(f"\nTotal de questões: {result['total_questions']}")
+    #print(f"Total de acertos: {result['correct_answers']}")t
 
     client.close()
 
