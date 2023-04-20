@@ -3,35 +3,41 @@ syntax = "proto3";
 package quiz;
 
 service QuizService {
-    rpc Authenticate(Student) returns (AuthResponse);
-    rpc GetQuestion(Empty) returns (Question);
-    rpc SubmitAnswer(Answer) returns (Result);
-    rpc GetFinalResult(Empty) returns (FinalResult);
+    rpc Authenticate (AuthenticationRequest) returns (AuthenticationResponse);
+    rpc GetQuestion (QuestionRequest) returns (Question);
+    rpc SubmitAnswer (AnswerSubmission) returns (AnswerResult);
+    rpc GetFinalResult (FinalResultRequest) returns (FinalResult);
 }
 
-message Empty {}
-
-message Student {
-    string id = 1;
+message AuthenticationRequest {
+    string student_id = 1;
     string password = 2;
 }
 
-message AuthResponse {
-  bool authenticated = 1;
-  string message = 2;
+message AuthenticationResponse {
+    bool authenticated = 1;
+}
+
+message QuestionRequest {
+    int32 question_index = 1;
 }
 
 message Question {
-    string question = 1;
-    repeated string options = 2;
+    int32 question_index = 1;
+    string question = 2;
+    repeated string options = 3;
 }
 
-message Answer {
-    int32 answer = 1;
+message AnswerSubmission {
+    int32 question_index = 1;
+    int32 answer = 2;
 }
 
-message Result {
+message AnswerResult {
     bool correct = 1;
+}
+
+message FinalResultRequest {
 }
 
 message FinalResult {

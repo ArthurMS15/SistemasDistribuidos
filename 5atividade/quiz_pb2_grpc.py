@@ -16,22 +16,22 @@ class QuizServiceStub(object):
         """
         self.Authenticate = channel.unary_unary(
                 '/quiz.QuizService/Authenticate',
-                request_serializer=quiz__pb2.Student.SerializeToString,
-                response_deserializer=quiz__pb2.AuthResponse.FromString,
+                request_serializer=quiz__pb2.AuthenticationRequest.SerializeToString,
+                response_deserializer=quiz__pb2.AuthenticationResponse.FromString,
                 )
         self.GetQuestion = channel.unary_unary(
                 '/quiz.QuizService/GetQuestion',
-                request_serializer=quiz__pb2.Empty.SerializeToString,
+                request_serializer=quiz__pb2.QuestionRequest.SerializeToString,
                 response_deserializer=quiz__pb2.Question.FromString,
                 )
         self.SubmitAnswer = channel.unary_unary(
                 '/quiz.QuizService/SubmitAnswer',
-                request_serializer=quiz__pb2.Answer.SerializeToString,
-                response_deserializer=quiz__pb2.Result.FromString,
+                request_serializer=quiz__pb2.AnswerSubmission.SerializeToString,
+                response_deserializer=quiz__pb2.AnswerResult.FromString,
                 )
         self.GetFinalResult = channel.unary_unary(
                 '/quiz.QuizService/GetFinalResult',
-                request_serializer=quiz__pb2.Empty.SerializeToString,
+                request_serializer=quiz__pb2.FinalResultRequest.SerializeToString,
                 response_deserializer=quiz__pb2.FinalResult.FromString,
                 )
 
@@ -68,22 +68,22 @@ def add_QuizServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Authenticate': grpc.unary_unary_rpc_method_handler(
                     servicer.Authenticate,
-                    request_deserializer=quiz__pb2.Student.FromString,
-                    response_serializer=quiz__pb2.AuthResponse.SerializeToString,
+                    request_deserializer=quiz__pb2.AuthenticationRequest.FromString,
+                    response_serializer=quiz__pb2.AuthenticationResponse.SerializeToString,
             ),
             'GetQuestion': grpc.unary_unary_rpc_method_handler(
                     servicer.GetQuestion,
-                    request_deserializer=quiz__pb2.Empty.FromString,
+                    request_deserializer=quiz__pb2.QuestionRequest.FromString,
                     response_serializer=quiz__pb2.Question.SerializeToString,
             ),
             'SubmitAnswer': grpc.unary_unary_rpc_method_handler(
                     servicer.SubmitAnswer,
-                    request_deserializer=quiz__pb2.Answer.FromString,
-                    response_serializer=quiz__pb2.Result.SerializeToString,
+                    request_deserializer=quiz__pb2.AnswerSubmission.FromString,
+                    response_serializer=quiz__pb2.AnswerResult.SerializeToString,
             ),
             'GetFinalResult': grpc.unary_unary_rpc_method_handler(
                     servicer.GetFinalResult,
-                    request_deserializer=quiz__pb2.Empty.FromString,
+                    request_deserializer=quiz__pb2.FinalResultRequest.FromString,
                     response_serializer=quiz__pb2.FinalResult.SerializeToString,
             ),
     }
@@ -108,8 +108,8 @@ class QuizService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/quiz.QuizService/Authenticate',
-            quiz__pb2.Student.SerializeToString,
-            quiz__pb2.AuthResponse.FromString,
+            quiz__pb2.AuthenticationRequest.SerializeToString,
+            quiz__pb2.AuthenticationResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -125,7 +125,7 @@ class QuizService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/quiz.QuizService/GetQuestion',
-            quiz__pb2.Empty.SerializeToString,
+            quiz__pb2.QuestionRequest.SerializeToString,
             quiz__pb2.Question.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -142,8 +142,8 @@ class QuizService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/quiz.QuizService/SubmitAnswer',
-            quiz__pb2.Answer.SerializeToString,
-            quiz__pb2.Result.FromString,
+            quiz__pb2.AnswerSubmission.SerializeToString,
+            quiz__pb2.AnswerResult.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,7 +159,7 @@ class QuizService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/quiz.QuizService/GetFinalResult',
-            quiz__pb2.Empty.SerializeToString,
+            quiz__pb2.FinalResultRequest.SerializeToString,
             quiz__pb2.FinalResult.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
