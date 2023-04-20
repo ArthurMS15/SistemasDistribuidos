@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package quiz;
+
+service QuizService {
+    rpc Authenticate(Student) returns (AuthResponse);
+    rpc GetQuestion(Empty) returns (Question);
+    rpc SubmitAnswer(Answer) returns (Result);
+    rpc GetFinalResult(Empty) returns (FinalResult);
+}
+
+message Empty {}
+
+message Student {
+    string id = 1;
+    string password = 2;
+}
+
+message AuthResponse {
+    bool authenticated = 1;
+}
+
+message Question {
+    string question = 1;
+    repeated string options = 2;
+}
+
+message Answer {
+    int32 answer = 1;
+}
+
+message Result {
+    bool correct = 1;
+}
+
+message FinalResult {
+    int32 total_questions = 1;
+    int32 correct_answers = 2;
+}
