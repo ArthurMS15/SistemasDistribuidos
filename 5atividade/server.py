@@ -3,6 +3,7 @@ from concurrent import futures
 import quiz_pb2
 import quiz_pb2_grpc
 import sys
+import time
 
 students = {
     "12345": "senha123",
@@ -27,7 +28,13 @@ class QuizServiceServicer(quiz_pb2_grpc.QuizServiceServicer):
         student_id = request.id
         password = request.password
         authenticated = student_id in students and students[student_id] == password
-        return quiz_pb2.AuthResponse(authenticated=authenticated)
+        message = "Autenticado com sucesso" if authenticated else "Falha na autenticação"
+        response = quiz_pb2.AuthResponse()
+        response.authenticated = authenticated
+        response.message = message
+        return response
+
+
 
     def GetQuestion(self, request, context):
         for question in questions:
@@ -66,3 +73,4 @@ def serve():
 if __name__ == "__main__":
     serve()
 
+#python server.py porta

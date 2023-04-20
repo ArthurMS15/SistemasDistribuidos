@@ -17,8 +17,10 @@ message Student {
 }
 
 message AuthResponse {
-    bool authenticated = 1;
+  bool authenticated = 1;
+  string message = 2;
 }
+
 
 message Question {
     string question = 1;
