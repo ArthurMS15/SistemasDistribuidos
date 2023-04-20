@@ -21,7 +21,6 @@ message AuthResponse {
   string message = 2;
 }
 
-
 message Question {
     string question = 1;
     repeated string options = 2;

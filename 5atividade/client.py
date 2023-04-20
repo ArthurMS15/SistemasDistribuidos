@@ -20,32 +20,50 @@ def main():
         student_id = input("Digite sua matrícula: ")
         password = input("Digite sua senha: ")
 
-        response = stub.Authenticate(quiz_pb2.Student(id=student_id, password=password))
+        try:
+            response = stub.Authenticate(quiz_pb2.Student(id=student_id, password=password))
+        except grpc._channel._InactiveRpcError as e:
+            print(f"Erro de comunicação com o servidor: {str(e)}. Verifique se o servidor está em execução e tente novamente.")
+            return
+
         authenticated = response.authenticated
 
         if not authenticated:
             print("Matrícula ou senha incorretos. Tente novamente.")
 
-    question_stream = stub.GetQuestion(quiz_pb2.Empty())
-    correct_answers = 0
-    for question in question_stream:
-        print(f"\n{question.question}")
-        for idx, option in enumerate(question.options):
-            print(f"{idx}. {option}")
+    try:
+        question_stream = stub.GetQuestion(quiz_pb2.Empty())
+        correct_answers = 0
+        for question in question_stream:
+            print(f"\n{question.question}")
+            for idx, option in enumerate(question.options):
+                print(f"{idx}. {option}")
 
-        student_answer = int(input("Digite o número da resposta correta: "))
-        result = stub.SubmitAnswer(quiz_pb2.Answer(answer=student_answer))
-        if result.correct:
-            print("Resposta correta!")
-            correct_answers += 1
-        else:
-            print("Resposta incorreta.")
+            student_answer = int(input("Digite o número da resposta correta: "))
 
-    final_result = stub.GetFinalResult(quiz_pb2.Empty())
-    print(f"\nTotal de questões: {final_result.total_questions}")
-    print(f"Total de acertos: {final_result.correct_answers}")
+            try:
+                result = stub.SubmitAnswer(quiz_pb2.Answer(answer=student_answer))
+            except grpc._channel._InactiveRpcError as e:
+                print(f"Erro de comunicação com o servidor: {str(e)}. Verifique se o servidor está em execução e tente novamente.")
+                return
+
+            if result.correct:
+                print("Resposta correta!")
+                correct_answers += 1
+            else:
+                print("Resposta incorreta.")
+
+        try:
+            final_result = stub.GetFinalResult(quiz_pb2.Empty())
+        except grpc._channel._InactiveRpcError as e:
+            print(f"Erro de comunicação com o servidor: {str(e)}. Verifique se o servidor está em execução e tente novamente.")
+            return
+
+        print(f"\nTotal de questões: {final_result.total_questions}")
+        print(f"Total de acertos: {final_result.correct_answers}")
+    except grpc._channel._InactiveRpcError as e:
+        print(f"Erro de comunicação com o servidor: {str(e)}. Verifique se o servidor está em execução e tente novamente.")
+        return
 
 if __name__ == "__main__":
     main()
-
-#python client.py

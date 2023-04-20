@@ -1,8 +1,8 @@
 import grpc
-from concurrent import futures
+import sys
 import quiz_pb2
 import quiz_pb2_grpc
-import sys
+from concurrent import futures
 import time
 
 students = {
@@ -24,6 +24,10 @@ questions = [
 ]
 
 class QuizServiceServicer(quiz_pb2_grpc.QuizServiceServicer):
+    def __init__(self):
+        self.question_counter = 0
+        self.correct_answers = 0
+
     def Authenticate(self, request, context):
         student_id = request.id
         password = request.password
@@ -34,23 +38,30 @@ class QuizServiceServicer(quiz_pb2_grpc.QuizServiceServicer):
         response.message = message
         return response
 
-
-
     def GetQuestion(self, request, context):
         for question in questions:
             yield quiz_pb2.Question(question=question["question"], options=question["options"])
 
     def SubmitAnswer(self, request, context):
-        student_answer = request.answer
         question_index = self.question_counter
-        self.question_counter += 1
+        if question_index >= len(questions):
+            context.set_details("Todas as perguntas já foram respondidas")
+            context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+            return quiz_pb2.Result()
+
+        student_answer = request.answer
         correct = student_answer == questions[question_index]["answer"]
         if correct:
             self.correct_answers += 1
-        return quiz_pb2.Result(correct=correct)
+
+        self.question_counter += 1
+
+        result = quiz_pb2.Result(correct=correct)
+        return result
 
     def GetFinalResult(self, request, context):
         return quiz_pb2.FinalResult(total_questions=len(questions), correct_answers=self.correct_answers)
+
 
 def serve():
     if len(sys.argv) != 2:
@@ -72,5 +83,3 @@ def serve():
 
 if __name__ == "__main__":
     serve()
-
-#python server.py porta
