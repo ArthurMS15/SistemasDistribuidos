@@ -19,7 +19,7 @@ questions = [
         "answer": 0
     },
     {
-        "question": "Qaunto é 3*3?",
+        "question": "Quanto é 3*3?",
         "options": ["16", "6", "9", "27"],
         "answer": 2
     }
