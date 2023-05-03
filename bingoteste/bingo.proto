@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package bingo;
+
+service BingoService {
+  rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse);
+  rpc Ready (ReadyRequest) returns (ReadyResponse);
+  rpc GetUserBoard (UserBoardRequest) returns (UserBoard);
+  rpc SubmitMarkedNumbers (MarkedNumbersRequest) returns (MarkedNumbersResponse);
+  rpc GetDrawnNumber (DrawnNumberRequest) returns (DrawnNumber);
+}
+
+message AuthenticateRequest {
+  string user_name = 1;
+}
+
+message AuthenticateResponse {
+  bool authenticated = 1;
+}
+
+message ReadyRequest {
+}
+
+message ReadyResponse {
+}
+
+message UserBoardRequest {
+}
+
+message UserBoard {
+  repeated int32 numbers = 1;
+}
+
+message MarkedNumbersRequest {
+  repeated int32 marked_numbers = 1;
+}
+
+message MarkedNumbersResponse {
+  bool valid = 1;
+  bool winner = 2;
+}
+
+message DrawnNumberRequest {
+}
+
+message DrawnNumber {
+  int32 number = 1;
+}
