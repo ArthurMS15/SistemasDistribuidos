@@ -25,6 +25,8 @@ questions = [
     }
 ]
 
+correct_answers = {}
+
 class QuizService(quiz_pb2_grpc.QuizServiceServicer):
     def Authenticate(self, request, context):
         authenticated = request.student_id in students and students[request.student_id] == request.password
@@ -37,10 +39,16 @@ class QuizService(quiz_pb2_grpc.QuizServiceServicer):
     def SubmitAnswer(self, request, context):
         question = questions[request.question_index]
         correct = request.answer == question["answer"]
+        if correct:
+            correct_answers[request.student_id] = correct_answers.get(request.student_id, 0) + 1
         return quiz_pb2.AnswerResult(correct=correct)
 
+
     def GetFinalResult(self, request, context):
-        return quiz_pb2.FinalResult(total_questions=len(questions), correct_answers=sum(1 for q in questions if q.get("correct")))
+        student_score = correct_answers.get(request.student_id, 0)
+        return quiz_pb2.FinalResult(total_questions=len(questions), correct_answers=student_score)
+
+
 
 def main():
     if len(sys.argv) != 2:

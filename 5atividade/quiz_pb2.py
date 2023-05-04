@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nquiz.proto\x12\x04quiz\"=\n\x15\x41uthenticationRequest\x12\x12\n\nstudent_id\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"/\n\x16\x41uthenticationResponse\x12\x15\n\rauthenticated\x18\x01 \x01(\x08\")\n\x0fQuestionRequest\x12\x16\n\x0equestion_index\x18\x01 \x01(\x05\"E\n\x08Question\x12\x16\n\x0equestion_index\x18\x01 \x01(\x05\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x0f\n\x07options\x18\x03 \x03(\t\":\n\x10\x41nswerSubmission\x12\x16\n\x0equestion_index\x18\x01 \x01(\x05\x12\x0e\n\x06\x61nswer\x18\x02 \x01(\x05\"\x1f\n\x0c\x41nswerResult\x12\x0f\n\x07\x63orrect\x18\x01 \x01(\x08\"\x14\n\x12\x46inalResultRequest\"?\n\x0b\x46inalResult\x12\x17\n\x0ftotal_questions\x18\x01 \x01(\x05\x12\x17\n\x0f\x63orrect_answers\x18\x02 \x01(\x05\x32\x89\x02\n\x0bQuizService\x12I\n\x0c\x41uthenticate\x12\x1b.quiz.AuthenticationRequest\x1a\x1c.quiz.AuthenticationResponse\x12\x34\n\x0bGetQuestion\x12\x15.quiz.QuestionRequest\x1a\x0e.quiz.Question\x12:\n\x0cSubmitAnswer\x12\x16.quiz.AnswerSubmission\x1a\x12.quiz.AnswerResult\x12=\n\x0eGetFinalResult\x12\x18.quiz.FinalResultRequest\x1a\x11.quiz.FinalResultb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nquiz.proto\x12\x04quiz\"=\n\x15\x41uthenticationRequest\x12\x12\n\nstudent_id\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"/\n\x16\x41uthenticationResponse\x12\x15\n\rauthenticated\x18\x01 \x01(\x08\")\n\x0fQuestionRequest\x12\x16\n\x0equestion_index\x18\x01 \x01(\x05\"E\n\x08Question\x12\x16\n\x0equestion_index\x18\x01 \x01(\x05\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x0f\n\x07options\x18\x03 \x03(\t\"N\n\x10\x41nswerSubmission\x12\x12\n\nstudent_id\x18\x01 \x01(\t\x12\x16\n\x0equestion_index\x18\x02 \x01(\x05\x12\x0e\n\x06\x61nswer\x18\x03 \x01(\x05\"\x1f\n\x0c\x41nswerResult\x12\x0f\n\x07\x63orrect\x18\x01 \x01(\x08\"(\n\x12\x46inalResultRequest\x12\x12\n\nstudent_id\x18\x01 \x01(\t\"?\n\x0b\x46inalResult\x12\x17\n\x0ftotal_questions\x18\x01 \x01(\x05\x12\x17\n\x0f\x63orrect_answers\x18\x02 \x01(\x05\x32\x89\x02\n\x0bQuizService\x12I\n\x0c\x41uthenticate\x12\x1b.quiz.AuthenticationRequest\x1a\x1c.quiz.AuthenticationResponse\x12\x34\n\x0bGetQuestion\x12\x15.quiz.QuestionRequest\x1a\x0e.quiz.Question\x12:\n\x0cSubmitAnswer\x12\x16.quiz.AnswerSubmission\x1a\x12.quiz.AnswerResult\x12=\n\x0eGetFinalResult\x12\x18.quiz.FinalResultRequest\x1a\x11.quiz.FinalResultb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'quiz_pb2', globals())
@@ -29,13 +29,13 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _QUESTION._serialized_start=175
   _QUESTION._serialized_end=244
   _ANSWERSUBMISSION._serialized_start=246
-  _ANSWERSUBMISSION._serialized_end=304
-  _ANSWERRESULT._serialized_start=306
-  _ANSWERRESULT._serialized_end=337
-  _FINALRESULTREQUEST._serialized_start=339
-  _FINALRESULTREQUEST._serialized_end=359
-  _FINALRESULT._serialized_start=361
-  _FINALRESULT._serialized_end=424
-  _QUIZSERVICE._serialized_start=427
-  _QUIZSERVICE._serialized_end=692
+  _ANSWERSUBMISSION._serialized_end=324
+  _ANSWERRESULT._serialized_start=326
+  _ANSWERRESULT._serialized_end=357
+  _FINALRESULTREQUEST._serialized_start=359
+  _FINALRESULTREQUEST._serialized_end=399
+  _FINALRESULT._serialized_start=401
+  _FINALRESULT._serialized_end=464
+  _QUIZSERVICE._serialized_start=467
+  _QUIZSERVICE._serialized_end=732
 # @@protoc_insertion_point(module_scope)

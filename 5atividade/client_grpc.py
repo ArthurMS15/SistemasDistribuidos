@@ -2,20 +2,7 @@ import grpc
 import sys
 import quiz_pb2
 import quiz_pb2_grpc
-
-questions = [
-    {
-        "question": "Quanto é 2+2?",
-        "options": ["4", "5", "6", "3"],
-        "answer": 0
-    },
-    {
-        "question": "Quanto é 3*3?",
-        "options": ["16", "6", "9", "27"],
-        "answer": 2
-    }
-]
-
+from server_grpc import questions
 
 def main():
     if len(sys.argv) != 3:
@@ -39,7 +26,7 @@ def main():
         if not authenticated:
             print("Matrícula ou senha incorretos. Tente novamente.")
 
-    for question_index in range(len(questions)):
+    for question_index in range(len(questions)): #len(questions)
         question = stub.GetQuestion(quiz_pb2.QuestionRequest(question_index=question_index))
         print(f"\n{question.question}")
 
@@ -47,14 +34,14 @@ def main():
             print(f"{idx}. {option}")
 
         student_answer = int(input("Digite o número da resposta correta: "))
-        answer_result = stub.SubmitAnswer(quiz_pb2.AnswerSubmission(question_index=question_index, answer=student_answer))
+        answer_result = stub.SubmitAnswer(quiz_pb2.AnswerSubmission(student_id=student_id, question_index=question_index, answer=student_answer))
 
         if answer_result.correct:
             print("Resposta correta!")
         else:
             print("Resposta incorreta.")
 
-    final_result = stub.GetFinalResult(quiz_pb2.FinalResultRequest())
+    final_result = stub.GetFinalResult(quiz_pb2.FinalResultRequest(student_id=student_id))
     print(f"\nTotal de questões: {final_result.total_questions}")
     print(f"Total de acertos: {final_result.correct_answers}")
 
