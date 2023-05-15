@@ -1,0 +1,9 @@
+baseado nesse arquivo .proto
+preciso que escreva um servidor e um cliente feitos em python.
+o que precisa ocorrer na comunicação entre ambos é:
+o cliente colocar o nome de usuário e o servidor deve armazenar o nome e ccriar um token de autenticação do usuário em específico;
+após a autenticação , quando no mínimo 2 clientes entrarem e ambos mandarem uma mensagem de ok para o servidor, o sevidor começa um timer de 15 segundos para iniciar o jogo, e mais clientes podem entrar no meio desse tempo, quando no minimo 2 clientes autenticarem e mandarem a mensagem de ok e passar os 15 segundos o jogo ainda assim começa, avisando então se ele entrou no jogo ou não caso passe dos 15 segundos, pois o usuário pode ser autenticado mas não mandar a mensagem de ok para participar do jogo;
+quando o jogo começar, depois dos 15 segundos, o servidor deve gerar aleatoriamente uma matriz 5x5 servindo como a tabela do bingo para cada usuário, sem repetir números na mesma tabela gerada e sem gerar tabelas iguais entre os usuários;
+depois de gerar aleatoriamente as tabelas para cada usuário, a cada 15 segundos passados o servidor deve sortear um número, mostrar para o cliente, e então o cliente deve verificar por meio de uma interface e marcar caso o número sorteado exista em sua tabela dentro desses 15 segundos;
+Quando passar esse tempo o servidor continua o jogo gerando novos números aleatórios para os clientes irem marcando ou não;
+quando algum cliente conseguir marcar todos os números, ele deve enviar uma mensagem dizendo 'bingo', e então o servidor deve verificar em um array que contém todos os números sorteados e ver se coincide com os números que o cliente marcou em sua tabela, se todos coincidirem ele mostra qual cliente ganhou o jogo, e se ele marcou algum número errado o servidor avisa para todos os clientes que houve um erro e o jogo continua, e o cliente que errou é desclassificado.
