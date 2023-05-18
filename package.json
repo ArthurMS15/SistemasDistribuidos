@@ -2,6 +2,7 @@
     "name": "bingo",
     "version": "1.0.0",
     "license": "MIT",
+    "type": "module",
     "scripts": {
       "client": "node src/client/client.js",
       "server": "node bingotrue/server.js"
