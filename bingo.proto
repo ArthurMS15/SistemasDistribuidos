@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+message LoginRequest {
+    string username = 1;
+}
+
+message LoginResponse {
+    string token = 1;
+    repeated string playersLoggedIn = 2; 
+    repeated string playersReady = 3; 
+    int32 status = 4; 
+    string message = 5;
+}
+
+message ReadyRequest {
+    string username = 1;
+    string token = 2;
+}
+
+message ReadyResponse {
+    repeated int32 card = 3;
+    int32 status = 1;
+    string message = 2;
+}
+
+message PlayRequest {
+    string username = 1;
+    string token = 2;
+}
+
+message GameStatusResponse {
+    int32 number = 1;
+    string winner = 2;
+    int32 status = 3;
+    string message = 4;
+}
+
+message WinCheckRequest {
+    string username = 1;
+    string token = 2;
+}
+    
+message WinCheckResponse {
+    int32 status = 1;
+    string message = 2;
+}
+
+service Bingo {
+    rpc Login (LoginRequest) returns (stream LoginResponse);
+    rpc Ready (ReadyRequest) returns (ReadyResponse);
+    rpc Play (PlayRequest) returns (stream GameStatusResponse);
+    rpc CheckWin(WinCheckRequest) returns (WinCheckResponse);
+}
