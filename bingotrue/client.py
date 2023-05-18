@@ -3,10 +3,11 @@ import bingo_pb2 as pb2
 import bingo_pb2_grpc as pb2_grpc
 import asyncio
 
-PORT = 50051
+
+PORT = 8000
 PROTO_FILE = "./proto/bingo.proto"
 
-channel = grpc.insecure_channel(f"localhost:{PORT}")
+channel = grpc.insecure_channel(f"172.16.1.15:{PORT}")
 client = pb2_grpc.BingoStub(channel)
 
 stage = 0
